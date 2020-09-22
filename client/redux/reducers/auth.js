@@ -1,50 +1,85 @@
 /* eslint-disable no-console */
+import Cookies from 'universal-cookie'
+import { history } from '..'
+
 const UPDATE_LOGIN = 'UPDATE_LOGIN'
 const UPDATE_PASSWORD = 'UPDATE_PASSWORD'
 const LOGIN = 'LOGIN'
 
+const cookies = new Cookies()
 const initialState = {
-  login: '',
-  password: ''
+  email: '',
+  password: '',
+  token: cookies.get('token'),
+  user: {}
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case UPDATE_LOGIN: {
-      return { ...state, login: action.login }
+      return { ...state, email: action.email }
     }
+
+    case LOGIN: {
+      return { ...state, token: action.token, password: '', user: action.user }
+    }
+
     case UPDATE_PASSWORD: {
       return { ...state, password: action.password }
     }
+
     default:
       return state
   }
 }
 
-export function updateLoginField(login) {
-  return { type: UPDATE_LOGIN, login }
+export function updateLoginField(email) {
+  return { type: UPDATE_LOGIN, email }
 }
 
 export function updatePasswordField(password) {
   return { type: UPDATE_PASSWORD, password }
 }
 
+export function validateUser() {
+  return (dispatch, getState) => {
+    const { email, password } = getState().auth
+    fetch('/api/v1/auth', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email,
+        password
+      })
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        dispatch({ type: LOGIN, token: data.token, user: data.user })
+        history.push('/private')
+      })
+      .catch((error) => console.log(error))
+  }
+}
+
 export function signIn() {
   return (dispatch, getState) => {
-    const { login, password } = getState().auth
+    const { email, password } = getState().auth
     fetch('/api/v1/auth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        login,
+        email,
         password
       })
     })
       .then((res) => res.json())
       .then((data) => {
-        dispatch({ type: LOGIN, token: data.token })
+        dispatch({ type: LOGIN, token: data.token, user: data.user })
+        history.push('/private')
       })
       .catch((error) => console.log(error))
   }
