@@ -41,19 +41,20 @@ export function updatePasswordField(password) {
   return { type: UPDATE_PASSWORD, password }
 }
 
-export function validateUser() {
-  return (dispatch, getState) => {
-    const { email, password } = getState().auth
-    fetch('/api/v1/auth', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email,
-        password
+export function tryGetUserInfo() {
+  return () => {
+    fetch('/api/v1/user-info')
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('user-info', data)
       })
-    })
+      .catch((error) => console.log(error))
+  }
+}
+
+export function trySignIn() {
+  return (dispatch) => {
+    fetch('/api/v1/auth')
       .then((res) => res.json())
       .then((data) => {
         dispatch({ type: LOGIN, token: data.token, user: data.user })
