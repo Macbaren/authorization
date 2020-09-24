@@ -53,7 +53,7 @@ passport.use('jwt', passportJWT.jwt)
 
 middleware.forEach((it) => server.use(it))
 
-server.get('/api/v1/user-info', auth(), (req, res) => {
+server.get('/api/v1/user-info', auth([]), (req, res) => {
   res.json({ status: '123' })
 })
 
