@@ -3,7 +3,7 @@ import User from '../model/User.model'
 import config from '../config'
 
 const cookieExtractor = (req) => {
-  return req && req.cooqies && req.cooqies.token
+  return req && req.cookies && req.cookies.token
 }
 
 const jwtOptions = {

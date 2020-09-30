@@ -8,7 +8,7 @@ import { Switch, Route, Redirect, StaticRouter } from 'react-router-dom'
 import store, { history } from '../redux'
 
 import Home from '../components/home'
-import Private from '../components/private-route'
+import PrivateComponent from '../components/private-route'
 // import LoginForm from '../components/login'
 import NotFound from '../components/404'
 
@@ -76,10 +76,10 @@ const RootComponent = (props) => {
       <RouterSelector history={history} location={props.location} context={props.context}>
         <Startup>
           <Switch>
+            <OnlyAnonymousRoute exact path="/login" component={() => <Home />} />
             <Route exact path="/" component={() => <Home />} />
-            <OnlyAnonymousRoute exact path="/login" component={() => <Private />} />
             <Route exact path="/dashboard" component={() => <Home />} />
-            <PrivateRoute exact path="/private" component={() => <Private />} />
+            <PrivateRoute exact path="/private" component={() => <PrivateComponent />} />
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>

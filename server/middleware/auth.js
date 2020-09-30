@@ -9,7 +9,7 @@ const handleJWT = (req, res, next, roles) => {
     await req.logIn(user, { session: false })
     console.log('pre', user.role, roles)
 
-    if (!roles.includes(user.role)) {
+    if (!roles.reduce((acc, rec) => acc && user.role.some((t) => t === rec), true)) {
       return res.status(401).json({ status: 401, ...err })
     }
     req.user = user

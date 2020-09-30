@@ -53,7 +53,7 @@ passport.use('jwt', passportJWT.jwt)
 
 middleware.forEach((it) => server.use(it))
 
-server.get('/api/v1/user-info', auth([]), (req, res) => {
+server.get('/api/v1/user-info', auth(['admin']), (req, res) => {
   res.json({ status: '123' })
 })
 
@@ -66,7 +66,7 @@ server.get('/api/v1/test/cookies', (req, res) => {
 server.get('/api/v1/auth', async (req, res) => {
   try {
     console.log('cookies', req.cookies)
-    const jwtUser = jwt.veryfy(req.cookies.token, config.secret)
+    const jwtUser = jwt.verify(req.cookies.token, config.secret)
     const user = await User.findById(jwtUser.uid)
     const payload = { uid: user.id }
     const token = jwt.sign(payload, config.secret, { expiresIn: '48h' })
@@ -79,7 +79,7 @@ server.get('/api/v1/auth', async (req, res) => {
 })
 
 server.post('/api/v1/auth', async (req, res) => {
-  console.log(req.body)
+  console.log('server post', req.body)
   try {
     const user = await User.findAndValidateUser(req.body)
     const payload = { uid: user.id }

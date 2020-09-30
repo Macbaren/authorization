@@ -7,6 +7,7 @@ const UPDATE_PASSWORD = 'UPDATE_PASSWORD'
 const LOGIN = 'LOGIN'
 
 const cookies = new Cookies()
+
 const initialState = {
   email: '',
   password: '',
@@ -60,7 +61,6 @@ export function trySignIn() {
         dispatch({ type: LOGIN, token: data.token, user: data.user })
         history.push('/private')
       })
-      .catch((error) => console.log(error))
   }
 }
 
