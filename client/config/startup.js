@@ -11,6 +11,7 @@ const Startup = (props) => {
       dispatch(trySignIn())
       dispatch(tryGetUserInfo())
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return props.children
